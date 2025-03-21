@@ -2,7 +2,7 @@
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClient, QueryClientProvider, useMutation, useQuery } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import BottomNav from "./components/BottomNav";
 import Index from "./pages/Index";
@@ -17,6 +17,51 @@ import NotFound from "./pages/NotFound";
 import ProductAnalysisScreen from "./pages/ProductAnalysisScreen";
 
 const queryClient = new QueryClient();
+
+// https://rapidapi.com/guides/call-apis-react-query
+function APICheck() {
+  const getHealth = async () => {
+    const res = await fetch("http://localhost:3000/api/v1/health");
+    return res.json()
+  }
+  const {data, error, isLoading} = useQuery({ queryKey: ['health'], queryFn: getHealth })
+  return <div>
+    {
+      error ? <div>API Health Check Failed</div>
+      : isLoading ? <div>Checking API Health ...</div>
+      : <div>API Health Good!</div>
+    }
+  </div>
+}
+
+function POSTTest() {
+  const doPOST = async () => {
+    const res = await fetch("http://localhost:3000/api/v1/echo",
+      {
+        method: "POST",
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({a: 1, b: "Hello"})
+      }
+    )
+    return res.json()
+  }
+
+  const mutation = useMutation({ mutationFn: doPOST })
+
+  return <div>
+  {
+    <>
+    { mutation.isError ? <div>Query failed: {mutation.error.message}</div> : null }
+    { mutation.isPending ? <div>Pending ...</div> : null }
+    { mutation.isSuccess ? <div>Success</div> : null }
+    <button onClick={() => {mutation.mutate()}}>Mutate</button>
+    </>
+  }
+  </div>
+}
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
@@ -37,6 +82,8 @@ const App = () => (
             <Route path="/product-analysis" element={<ProductAnalysisScreen />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
+          <APICheck />
+          <POSTTest />
           <BottomNav />
         </BrowserRouter>
       </div>

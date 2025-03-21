@@ -4,6 +4,8 @@
 
 Adapting existing code to add gamification features
 
+See [API Contribution](./API-Contribution.md) for information on how to modify the API and call it
+
 ## How can I edit this code?
 
 There are several ways of editing your application.
@@ -28,6 +30,13 @@ npm ci
 
 # Step 4: Start the development server with auto-reloading and an instant preview.
 npm run dev
+
+```
+
+Step 5: Start the API running too: In a separate terminal do
+
+```sh
+npm run dev-api
 ```
 
 ### Edit a file directly in GitHub
