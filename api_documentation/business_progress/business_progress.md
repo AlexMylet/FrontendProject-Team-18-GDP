@@ -29,7 +29,8 @@ Links to API details:
 
 - [Product Sales Forecast](./forecast/product_sales.md)
 
-- [Get Goal List](./goals/list.md)
+- [Get Goal List](./goals/goal_list.md)
+- [Get Quest List](./goals/quest_list.md)
 - [Add New Goal](./goals/add.md)
 - [Edit Goal](./goals/edit.md)
 - [Remove Goal](./goals/remove.md)
