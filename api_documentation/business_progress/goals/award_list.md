@@ -18,13 +18,10 @@ Success Response:
 {
   "success": true,
   "awards": Array[{
-    "uuid": UUID,
-    "awards": {
-      "id": string,
-      "name": string,
-      "description": string,
-      "achieved_date": string // YYYY-MM-DD
-    }
+    "id": UUID,
+    "name": string,
+    "description": string,
+    "achieved_date": string // YYYY-MM-DD
   }]
 }
 ```

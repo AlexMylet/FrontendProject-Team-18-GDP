@@ -18,6 +18,13 @@ interface Goal extends StoredGoal {
     current_progress: number,
 }
 
+interface Award {
+    id: UUID,
+    name: string,
+    description: string,
+    achieved_date: string, // YYYY-MM-DD
+}
+
 // Storage interaction
 interface GoalStorage {
     get: (userID: UserID) => StoredGoal[],
@@ -47,6 +54,8 @@ function calculate_current_progress(goal: StoredGoal): Goal {
     }
 }
 
+function get_award_list(userID: UserID): Award[] { throw Error("NotImplemented (get_award_list)")}
+
 function get_user_goals(access_token: AccessToken): Goal[] {
     const the_goals: StoredGoal[] = goal_storage.get(get_user_from_access_token(access_token))
     return the_goals.map((stored_goal) => calculate_current_progress(stored_goal))
@@ -75,6 +84,15 @@ router.post("/api/v1/business_progress/goals/add", (req: Request, res: Response)
         add_user_goal(req.body.access_token, req.body.goal)
         const updated_goals = get_user_goals(req.body.access_token) // TODO: should we filter to just the "Goal"s
         res.json({ success: true, updated_goals: updated_goals})
+    } catch (error) {
+        res.json({ success: false, failed_msg: error.message})
+    }
+});
+
+router.post("/api/v1/business_progress/goals/award_list", (req: Request, res: Response) => {
+    try {
+        const awards = get_award_list(get_user_from_access_token(req.body.access_token))
+        res.json({ success: true, awards: awards})
     } catch (error) {
         res.json({ success: false, failed_msg: error.message})
     }
