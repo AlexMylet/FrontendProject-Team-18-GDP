@@ -38,6 +38,12 @@ const goal_storage: GoalStorage = {
     remove: (userID: UserID, goal_uuid: UUID) => { throw Error("NotImplemented (goal_storage.remove)") },
 }
 
+const quest_storage: GoalStorage = {
+    get: (userID: UserID) => { throw Error("NotImplemented (quest_storage.get)")},
+    add: (userID: UserID, goal: StoredGoal) => { throw Error("NotImplemented (quest_storage.add)") },
+    remove: (userID: UserID, goal_uuid: UUID) => { throw Error("NotImplemented (quest_storage.remove)") },
+}
+
 // TODO: this function should probably do some caching!
 // If, say, timestamp of business data has not changed
 // and the goal has not been updated, then cache.
@@ -56,9 +62,17 @@ function calculate_current_progress(goal: StoredGoal): Goal {
 
 function get_award_list(userID: UserID): Award[] { throw Error("NotImplemented (get_award_list)")}
 
-function get_user_goals(access_token: AccessToken): Goal[] {
-    const the_goals: StoredGoal[] = goal_storage.get(get_user_from_access_token(access_token))
+function get_goals_from_storage(access_token: AccessToken, storage: GoalStorage): Goal[] {
+    const the_goals: StoredGoal[] = storage.get(get_user_from_access_token(access_token))
     return the_goals.map((stored_goal) => calculate_current_progress(stored_goal))
+}
+
+function get_user_goals(access_token: AccessToken): Goal[] {
+    return get_goals_from_storage(access_token, goal_storage)
+}
+
+function get_user_quests(access_token: AccessToken): Goal[] {
+    return get_goals_from_storage(access_token, quest_storage)
 }
 
 function add_user_goal(access_token: AccessToken, added_goal: PartialGoal, existing_uuid: UUID | null = null): void {
@@ -82,7 +96,11 @@ const router = Router();
 router.post("/api/v1/business_progress/goals/add", (req: Request, res: Response) => {
     try {
         add_user_goal(req.body.access_token, req.body.goal)
-        const updated_goals = get_user_goals(req.body.access_token) // TODO: should we filter to just the "Goal"s
+        const updated_goals = get_user_goals(req.body.access_token)
+        // Check all actually goals
+        updated_goals.forEach(goal => {
+            console.assert(goal.goal_or_quest === "Goal")
+        });
         res.json({ success: true, updated_goals: updated_goals})
     } catch (error) {
         res.json({ success: false, failed_msg: error.message})
@@ -105,7 +123,11 @@ router.post("/api/v1/business_progress/goals/edit", (req: Request, res: Response
         const access_token = req.body.access_token
         remove_user_goal(access_token, edited_uuid)
         add_user_goal(access_token, req.body.updated_goal, edited_uuid)
-        const updated_goals = get_user_goals(req.body.access_token) // TODO: should we filter to just the "Goal"s
+        const updated_goals = get_user_goals(req.body.access_token)
+        // Check all actually goals
+        updated_goals.forEach(goal => {
+            console.assert(goal.goal_or_quest === "Goal")
+        });
         res.json({ success: true, updated_goals: updated_goals})
     } catch (error) {
         res.json({ success: false, failed_msg: error.message})
@@ -114,7 +136,11 @@ router.post("/api/v1/business_progress/goals/edit", (req: Request, res: Response
 
 router.post("/api/v1/business_progress/goals/goal_list", (req: Request, res: Response) => {
     try {
-        const goals = get_user_goals(req.body.access_token).filter(((goal: Goal) => goal.goal_or_quest === "Goal"))
+        const goals = get_user_goals(req.body.access_token)
+        // Check all actually goals
+        goals.forEach(goal => {
+            console.assert(goal.goal_or_quest === "Goal")
+        });
         res.json({ success: true, goals: goals})
     } catch (error) {
         res.json({ success: false, failed_msg: error.message})
@@ -123,7 +149,11 @@ router.post("/api/v1/business_progress/goals/goal_list", (req: Request, res: Res
 
 router.post("/api/v1/business_progress/goals/quest_list", (req: Request, res: Response) => {
     try {
-        const quests = get_user_goals(req.body.access_token).filter(((goal: Goal) => goal.goal_or_quest === "Quest"))
+        const quests = get_user_quests(req.body.access_token)
+        // Check all actually goals
+        quests.forEach(goal => {
+            console.assert(goal.goal_or_quest === "Quest")
+        });
         res.json({ success: true, goals: quests})
     } catch (error) {
         res.json({ success: false, failed_msg: error.message})
@@ -133,7 +163,11 @@ router.post("/api/v1/business_progress/goals/quest_list", (req: Request, res: Re
 router.post("/api/v1/business_progress/goals/remove", (req: Request, res: Response) => {
     try {
         remove_user_goal(req.body.access_token, req.body.goal_uuid)
-        const updated_goals = get_user_goals(req.body.access_token) // TODO: should we filter to just the "Goal"s
+        const updated_goals = get_user_goals(req.body.access_token)
+        // Check all actually goals
+        updated_goals.forEach(goal => {
+            console.assert(goal.goal_or_quest === "Goal")
+        });
         res.json({ success: true, updated_goals: updated_goals})
     } catch (error) {
         res.json({ success: false, failed_msg: error.message})

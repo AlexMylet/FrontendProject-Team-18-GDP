@@ -21,7 +21,7 @@ Success Response:
   "updated_goals": Array[{
       "id": UUID,
       "name": string,
-      "goal_or_quest": string, // "Goal" | "Quest"
+      "goal_or_quest": "Goal",
       "unit": string,
       "target": float,
       "current_progress": float,
