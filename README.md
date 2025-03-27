@@ -36,7 +36,7 @@ npm run dev
 Step 5: Start the API running too: In a separate terminal do
 
 ```sh
-npm run dev-api
+npm run api-dev
 ```
 
 ### Edit a file directly in GitHub
