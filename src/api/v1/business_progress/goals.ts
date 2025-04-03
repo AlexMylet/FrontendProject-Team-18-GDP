@@ -32,24 +32,28 @@ interface GoalStorage {
     remove: (userID: UserID, goal_UUID: UUID) => void,
 }
 
+const goal_dictionary: Record<UserID, StoredGoal[]> = {}
+
 const goal_storage: GoalStorage = {
-    get: (userID: UserID) => { throw Error("NotImplemented (goal_storage.get)")},
-    add: (userID: UserID, goal: StoredGoal) => { throw Error("NotImplemented (goal_storage.add)") },
-    remove: (userID: UserID, goal_uuid: UUID) => { throw Error("NotImplemented (goal_storage.remove)") },
+    get: (userID: UserID) => goal_dictionary[userID], //{ throw Error("NotImplemented (goal_storage.get)")},
+    add: (userID: UserID, goal: StoredGoal) => /*goal_dictionary.userID =*/ goal_dictionary[userID].push(goal), // { throw Error("NotImplemented (goal_storage.add)") },
+    remove: (userID: UserID, goal_uuid: UUID) => goal_dictionary[userID] = goal_dictionary[userID].filter((goal) => goal.id !== goal_uuid), //{ throw Error("NotImplemented (goal_storage.remove)") },
 }
 
+const quest_dictionary: Record<UserID, StoredGoal[]> = {}
+
 const quest_storage: GoalStorage = {
-    get: (userID: UserID) => { throw Error("NotImplemented (quest_storage.get)")},
-    add: (userID: UserID, goal: StoredGoal) => { throw Error("NotImplemented (quest_storage.add)") },
-    remove: (userID: UserID, goal_uuid: UUID) => { throw Error("NotImplemented (quest_storage.remove)") },
+    get: (userID: UserID) => quest_dictionary[userID], // { throw Error("NotImplemented (quest_storage.get)")},
+    add: (userID: UserID, quest: StoredGoal) => quest_dictionary[userID].push(quest), // { throw Error("NotImplemented (quest_storage.add)") },
+    remove: (userID: UserID, quest_uuid: UUID) => quest_dictionary[userID] = quest_dictionary[userID].filter((quest) => quest.id !== quest_uuid),// { throw Error("NotImplemented (quest_storage.remove)") },
 }
 
 // TODO: this function should probably do some caching!
 // If, say, timestamp of business data has not changed
 // and the goal has not been updated, then cache.
 function calculate_current_progress(goal: StoredGoal): Goal {
-    throw("NotImplemented (calculate_current_progress)")
-    const current_progress = 1
+    // throw("NotImplemented (calculate_current_progress)")
+    const current_progress = 0  // TODO: actual mocking
     return {
         name: goal.name,
         unit: goal.unit,
