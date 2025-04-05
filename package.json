@@ -11,7 +11,7 @@
     "preview": "vite preview",
     "api-dev": "nodemon --exec npx tsx src/api/api.ts",
     "test": "jest",
-    "prepare": "husky install"
+    "prepare": "husky"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",
@@ -100,5 +100,8 @@
   "lint-staged": {
     "*.{js,ts}": "eslint --cache --fix",
     "*.{js,css,md,ts}": "prettier --write"
+  },
+  "overrides": {
+    "glob": "^10.0.0"
   }
 }
