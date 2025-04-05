@@ -35,9 +35,30 @@ interface GoalStorage {
 const goal_dictionary: Record<UserID, StoredGoal[]> = {}
 
 const goal_storage: GoalStorage = {
-    get: (userID: UserID) => goal_dictionary[userID], //{ throw Error("NotImplemented (goal_storage.get)")},
-    add: (userID: UserID, goal: StoredGoal) => /*goal_dictionary.userID =*/ goal_dictionary[userID].push(goal), // { throw Error("NotImplemented (goal_storage.add)") },
-    remove: (userID: UserID, goal_uuid: UUID) => goal_dictionary[userID] = goal_dictionary[userID].filter((goal) => goal.id !== goal_uuid), //{ throw Error("NotImplemented (goal_storage.remove)") },
+    get: (userID: UserID) => {
+        const res = goal_dictionary[userID]
+        if (res == null) {
+            return []
+        } else {
+            return res
+        }
+    },
+    add: (userID: UserID, goal: StoredGoal) => {
+        console.assert(goal.goal_or_quest === "Goal");
+        const the_entry = goal_dictionary[userID]
+        if (the_entry == null) {
+            goal_dictionary[userID] = [goal]
+        }
+        else {
+            the_entry.push(goal)
+            goal_dictionary[userID] = the_entry
+        }
+    },
+    remove: (userID: UserID, goal_uuid: UUID) => {
+        goal_dictionary[userID] = goal_dictionary[userID].filter(
+            (goal) => goal.id !== goal_uuid
+        )
+    }
 }
 
 const quest_dictionary: Record<UserID, StoredGoal[]> = {}
@@ -179,3 +200,11 @@ router.post("/api/v1/business_progress/goals/remove", (req: Request, res: Respon
 });
 
 export default router;
+
+// Testing
+
+if (process.env['NODE_DEV'] === 'TEST') {
+    module.exports.goal_storage = goal_storage
+    module.exports.quest_storage = quest_storage
+    module.exports.get_goals_from_storage = get_goals_from_storage
+}
