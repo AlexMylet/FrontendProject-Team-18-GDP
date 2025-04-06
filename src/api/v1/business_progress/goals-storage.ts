@@ -16,45 +16,42 @@ import {
 
 import calculate_current_progress from "./calculate_current_progress";
 
-const goal_dictionary: Record<UserID, StoredGoal[]> = {};
+function goal_storage_factory(
+  goal_dictionary: Record<UserID, StoredGoal[]>,
+): GoalStorage {
+  const goal_storage: GoalStorage = {
+    get: (userID: UserID) => {
+      const res = goal_dictionary[userID];
+      if (res == null) {
+        return [];
+      } else {
+        return res;
+      }
+    },
+    add: (userID: UserID, goal: StoredGoal) => {
+      console.assert(goal.goal_or_quest === "Goal");
+      const the_entry = goal_dictionary[userID];
+      if (the_entry == null) {
+        goal_dictionary[userID] = [goal];
+      } else {
+        the_entry.push(goal);
+        goal_dictionary[userID] = the_entry;
+      }
+    },
+    remove: (userID: UserID, goal_uuid: UUID) => {
+      goal_dictionary[userID] = goal_dictionary[userID].filter(
+        (goal) => goal.id !== goal_uuid,
+      );
+    },
+  };
+  return goal_storage;
+}
 
-const goal_storage: GoalStorage = {
-  get: (userID: UserID) => {
-    const res = goal_dictionary[userID];
-    if (res == null) {
-      return [];
-    } else {
-      return res;
-    }
-  },
-  add: (userID: UserID, goal: StoredGoal) => {
-    console.assert(goal.goal_or_quest === "Goal");
-    const the_entry = goal_dictionary[userID];
-    if (the_entry == null) {
-      goal_dictionary[userID] = [goal];
-    } else {
-      the_entry.push(goal);
-      goal_dictionary[userID] = the_entry;
-    }
-  },
-  remove: (userID: UserID, goal_uuid: UUID) => {
-    goal_dictionary[userID] = goal_dictionary[userID].filter(
-      (goal) => goal.id !== goal_uuid
-    );
-  },
-};
+const goal_dictionary: Record<UserID, StoredGoal[]> = {};
+const goal_storage = goal_storage_factory(goal_dictionary);
 
 const quest_dictionary: Record<UserID, StoredGoal[]> = {};
-
-const quest_storage: GoalStorage = {
-  get: (userID: UserID) => quest_dictionary[userID],
-  add: (userID: UserID, quest: StoredGoal) =>
-    quest_dictionary[userID].push(quest),
-  remove: (userID: UserID, quest_uuid: UUID) =>
-    (quest_dictionary[userID] = quest_dictionary[userID].filter(
-      (quest) => quest.id !== quest_uuid
-    )),
-};
+const quest_storage = goal_storage_factory(quest_dictionary);
 
 function get_award_list(userID: UserID): Award[] {
   throw Error("NotImplemented (get_award_list)");
@@ -62,13 +59,13 @@ function get_award_list(userID: UserID): Award[] {
 
 function get_goals_from_storage(
   access_token: AccessToken,
-  storage: GoalStorage
+  storage: GoalStorage,
 ): Goal[] {
   const the_goals: StoredGoal[] = storage.get(
-    get_user_from_access_token(access_token)
+    get_user_from_access_token(access_token),
   );
   return the_goals.map((stored_goal) =>
-    calculate_current_progress(stored_goal)
+    calculate_current_progress(stored_goal),
   );
 }
 
@@ -83,7 +80,7 @@ function get_user_quests(access_token: AccessToken): Goal[] {
 function add_user_goal(
   access_token: AccessToken,
   added_goal: PartialGoal,
-  existing_uuid: UUID | null = null
+  existing_uuid: UUID | null = null,
 ): void {
   const id = existing_uuid === null ? new_UUID() : existing_uuid;
   const full_goal: StoredGoal = {
@@ -108,9 +105,4 @@ export {
   remove_user_goal,
 };
 // Those only export for testing
-export {
-  calculate_current_progress,
-  get_goals_from_storage,
-  goal_storage,
-  quest_storage,
-};
+export { get_goals_from_storage, goal_storage, quest_storage };
