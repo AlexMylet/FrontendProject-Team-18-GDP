@@ -1,11 +1,36 @@
-name: Tests
+name: CI
 on: push
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
+      with:
+        ref: ${{ github.head_ref }}
     - name: Install modules
       run: npm ci
     - name: Run tests
       run: npm test
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        ref: ${{ github.head_ref }}
+    - name: Install modules
+      run: npm ci
+    - name: Run linter
+      run: npm run lint
+  prettier:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        ref: ${{ github.head_ref }}
+    - name: Install modules
+      run: npm ci
+    - name: Run Prettier Dry
+      uses: creyD/prettier_action@v4.3
+      with:
+        dry: true
+        prettier_options: --check
