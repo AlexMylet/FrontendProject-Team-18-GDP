@@ -62,3 +62,7 @@ This project is built with
 - React
 - shadcn-ui
 - Tailwind CSS
+
+## Testing
+
+To run all tests, run `npm test`
