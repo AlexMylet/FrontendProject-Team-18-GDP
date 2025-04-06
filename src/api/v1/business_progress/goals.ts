@@ -26,7 +26,7 @@ router.post(
     } catch (error) {
       res.json({ success: false, failed_msg: error.message });
     }
-  }
+  },
 );
 
 router.post(
@@ -34,13 +34,13 @@ router.post(
   (req: Request, res: Response) => {
     try {
       const awards = get_award_list(
-        get_user_from_access_token(req.body.access_token)
+        get_user_from_access_token(req.body.access_token),
       );
       res.json({ success: true, awards: awards });
     } catch (error) {
       res.json({ success: false, failed_msg: error.message });
     }
-  }
+  },
 );
 
 router.post(
@@ -61,7 +61,7 @@ router.post(
     } catch (error) {
       res.json({ success: false, failed_msg: error.message });
     }
-  }
+  },
 );
 
 router.post(
@@ -77,7 +77,7 @@ router.post(
     } catch (error) {
       res.json({ success: false, failed_msg: error.message });
     }
-  }
+  },
 );
 
 router.post(
@@ -93,7 +93,7 @@ router.post(
     } catch (error) {
       res.json({ success: false, failed_msg: error.message });
     }
-  }
+  },
 );
 
 router.post(
@@ -110,7 +110,7 @@ router.post(
     } catch (error) {
       res.json({ success: false, failed_msg: error.message });
     }
-  }
+  },
 );
 
 export default router;

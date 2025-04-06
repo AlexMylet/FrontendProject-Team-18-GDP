@@ -26,13 +26,13 @@ After this, you need to edit [api.ts](./src/api/api.ts):
 a. Below the "Route imports" comment, add
 
 ```ts
-import abRoutes from "./v1/a/b"
+import abRoutes from "./v1/a/b";
 ```
 
 b. Below the "Route usage" comment, add
 
 ```ts
-app.use("/", abRoutes)
+app.use("/", abRoutes);
 ```
 
 Convention:
@@ -74,16 +74,14 @@ You then may wish to use data to display some useful information.
 Modify the above by using a POST by [doing](https://stackoverflow.com/questions/29775797/fetch-post-json-data)
 
 ```ts
-    const res = await fetch("http://api.example.com/api/example",
-      {
-        method: "POST",
-        headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({a: 1, b: "Hello"})
-      }
-    )
+const res = await fetch("http://api.example.com/api/example", {
+  method: "POST",
+  headers: {
+    Accept: "application/json",
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({ a: 1, b: "Hello" }),
+});
 ```
 
 #### If you don't mutate server state
@@ -97,20 +95,30 @@ Then you should use a [mutation](https://tanstack.com/query/latest/docs/framewor
 You should change the line with a `useQuery` to be
 
 ```ts
-const mutation = useMutation({ mutationFn: callAPI })
+const mutation = useMutation({ mutationFn: callAPI });
 ```
 
 You can then use this as follows
 
 ```tsx
-  return <div>
-  {
-    <>
-    { mutation.isError ? <div>Query failed: {mutation.error.message}</div> : null }
-    { mutation.isPending ? <div>Pending ...</div> : null }
-    { mutation.isSuccess ? <div>Success</div> : null }
-    <button onClick={() => {mutation.mutate()}}>Mutate</button>
-    </>
-  }
+return (
+  <div>
+    {
+      <>
+        {mutation.isError ? (
+          <div>Query failed: {mutation.error.message}</div>
+        ) : null}
+        {mutation.isPending ? <div>Pending ...</div> : null}
+        {mutation.isSuccess ? <div>Success</div> : null}
+        <button
+          onClick={() => {
+            mutation.mutate();
+          }}
+        >
+          Mutate
+        </button>
+      </>
+    }
   </div>
+);
 ```

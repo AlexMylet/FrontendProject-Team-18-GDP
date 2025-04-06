@@ -11,7 +11,9 @@
     "preview": "vite preview",
     "api-dev": "nodemon --exec npx tsx src/api/api.ts",
     "test": "jest",
-    "prepare": "husky"
+    "prepare": "husky",
+    "prettier": "prettier -l **/*.{ts,js,md}",
+    "prettier-write": "prettier --write **/*.{ts,js,md}"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",
