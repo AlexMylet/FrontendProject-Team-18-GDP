@@ -1,4 +1,5 @@
 import type { Config } from "tailwindcss";
+import animate from "tailwindcss-animate";
 
 export default {
   darkMode: ["class"],
@@ -19,7 +20,7 @@ export default {
     },
     extend: {
       fontFamily: {
-        quicksand: ['Quicksand', 'sans-serif'],
+        quicksand: ["Quicksand", "sans-serif"],
       },
       colors: {
         gold: {
@@ -86,18 +87,18 @@ export default {
         "slide-in": "slide-in 0.6s ease-out",
       },
       rotate: {
-        'y-180': '180deg',
+        "y-180": "180deg",
       },
       transformStyle: {
-        '3d': 'preserve-3d',
+        "3d": "preserve-3d",
       },
       perspective: {
-        '1000': '1000px',
+        "1000": "1000px",
       },
       backfaceVisibility: {
-        'hidden': 'hidden',
+        hidden: "hidden",
       },
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [animate],
 } satisfies Config;

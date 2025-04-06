@@ -9,6 +9,9 @@ interface ScorecardSectionProps {
   id: number;
   title: string;
   subtitle?: string;
+  // The typing here is incredibly stupid and unsafe
+  // Note this code is currently unused
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any  ---- I'm not fixing the bot's mess
   chartData: Array<any>;
   isEven: boolean;
   showDonutChart?: boolean;

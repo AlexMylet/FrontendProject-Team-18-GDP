@@ -10,6 +10,7 @@ import Today from "./pages/Today";
 import Coach from "./pages/Coach";
 import CoachNegativeMargin from "./pages/CoachNegativeMargin";
 import CoachScreen2 from "./pages/CoachScreen2";
+import ContributionMargin from "./pages/ContributionMargin";
 import Progress from "./pages/Progress";
 import Customize from "./pages/Customize";
 import Forecast from "./pages/Forecast";
@@ -76,6 +77,7 @@ const App = () => (
             <Route path="/ask-anything" element={<Coach />} />
             <Route path="/coach/negative-margin" element={<CoachNegativeMargin />} />
             <Route path="/coach-screen-2" element={<CoachScreen2 />} />
+            <Route path="/contribution-margin" element={<ContributionMargin />} />
             <Route path="/scorecard" element={<Progress />} />
             <Route path="/notifications" element={<Customize />} />
             <Route path="/forecast" element={<Forecast />} />

@@ -3,6 +3,11 @@ import { useNavigate } from "react-router-dom";
 import { ScatterChart, Scatter, XAxis, YAxis, ResponsiveContainer, Tooltip, ZAxis, CartesianGrid } from "recharts";
 import { AlertTriangle } from "lucide-react";
 
+interface Props {
+  cx: number,
+  cy: number
+}
+
 interface ProductDataPoint {
   x: number;
   y: number;
@@ -11,7 +16,7 @@ interface ProductDataPoint {
   fill: string;
   isHighlight?: boolean;
   opacity?: number;
-  shape?: (props: any) => JSX.Element;
+  shape?: (props: Props) => JSX.Element;
 }
 
 interface ProductScatterPlotProps {
@@ -70,7 +75,7 @@ const ProductScatterPlot = ({ scatterData, starHighlight }: ProductScatterPlotPr
               margin: 0,
               padding: 0
             }}
-            formatter={(value: any, name: string, props: any) => {
+            formatter={(/*value: any, name: string, props: any*/) => {
               return null;
             }}
             content={({ active, payload }) => {
@@ -95,7 +100,7 @@ const ProductScatterPlot = ({ scatterData, starHighlight }: ProductScatterPlotPr
           />
           <Scatter 
             data={starHighlight}
-            shape={(props: any) => {
+            shape={(props: Props) => {
               const { cx, cy } = props;
               return (
                 <g 
@@ -128,3 +133,4 @@ const ProductScatterPlot = ({ scatterData, starHighlight }: ProductScatterPlotPr
 };
 
 export default ProductScatterPlot;
+export type { Props };

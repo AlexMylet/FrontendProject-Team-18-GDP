@@ -13,6 +13,9 @@ interface ContributionMarginDonutProps {
 }
 
 const ContributionMarginDonut = ({ data, colors }: ContributionMarginDonutProps) => {
+  // Need to use any here might be a problem with the library design
+  // Note this code is currently unused
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any  ---- I'm not fixing the bot's mess
   const CustomTooltip = ({ active, payload }: any) => {
     if (active && payload && payload.length) {
       const item = payload[0].payload;

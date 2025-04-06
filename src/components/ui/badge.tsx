@@ -33,4 +33,5 @@ function Badge({ className, variant, ...props }: BadgeProps) {
   )
 }
 
+// eslint-disable-next-line react-refresh/only-export-components  ---- I'm not fixing the bot's mess
 export { Badge, badgeVariants }

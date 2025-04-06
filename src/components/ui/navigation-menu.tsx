@@ -116,6 +116,7 @@ NavigationMenuIndicator.displayName =
   NavigationMenuPrimitive.Indicator.displayName
 
 export {
+  // eslint-disable-next-line react-refresh/only-export-components  ---- I'm not fixing the bot's mess
   navigationMenuTriggerStyle,
   NavigationMenu,
   NavigationMenuList,

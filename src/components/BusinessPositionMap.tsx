@@ -10,6 +10,7 @@ const BusinessPositionMap = ({ positions, comparativeBusinesses }: BusinessPosit
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    const containerRef_current = containerRef.current
     if (!containerRef.current) return;
 
     // Scene setup with white background
@@ -95,7 +96,7 @@ const BusinessPositionMap = ({ positions, comparativeBusinesses }: BusinessPosit
     // Cleanup
     return () => {
       window.removeEventListener('resize', handleResize);
-      containerRef.current?.removeChild(renderer.domElement);
+      containerRef_current?.removeChild(renderer.domElement);
       renderer.dispose();
     };
   }, [positions, comparativeBusinesses]);

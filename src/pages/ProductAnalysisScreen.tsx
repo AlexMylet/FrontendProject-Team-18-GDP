@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { Star } from "lucide-react";
 import TopBanner from "@/components/TopBanner";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import ProductScatterPlot from "@/components/product-analysis/ProductScatterPlot";
+import ProductScatterPlot, { Props } from "@/components/product-analysis/ProductScatterPlot";
 import ProductBreakevenSection from "@/components/product-analysis/ProductBreakevenSection";
 
 interface ProductDataType {
@@ -48,7 +48,7 @@ const ProductAnalysisScreen = ({ productData }: ProductAnalysisScreenProps) => {
     isHighlight: true,
     fill: '#FEF7CD',
     opacity: 0.8,
-    shape: (props: any) => {
+    shape: (props: Props) => {
       const { cx, cy } = props;
       return (
         <g 
