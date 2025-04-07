@@ -4,10 +4,10 @@ import {
   get_user_goals,
   add_user_goal,
   remove_user_goal,
-} from "../../../../../src/api/v1/business_progress/goals-storage";
+} from "../../../../../src/api/v1/business_progress/goals/goals-storage";
 
 jest.mock(
-  "../../../../../src/api/v1/business_progress/calculate_current_progress",
+  "../../../../../src/api/v1/business_progress/goals/calculate_current_progress",
 );
 
 const the_goal = {

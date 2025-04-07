@@ -4,7 +4,7 @@ import {
   new_UUID,
   get_user_from_access_token,
   UserID,
-} from "../../common";
+} from "../../../common";
 
 import {
   PartialGoal,

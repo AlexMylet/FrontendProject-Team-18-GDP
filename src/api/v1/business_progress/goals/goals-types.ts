@@ -1,4 +1,4 @@
-import { UUID, UserID } from "../../common";
+import { UUID, UserID } from "../../../common";
 
 interface PartialGoal {
   name: string;

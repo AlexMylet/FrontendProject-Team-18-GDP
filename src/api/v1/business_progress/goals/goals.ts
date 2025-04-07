@@ -1,14 +1,14 @@
 // https://medium.com/@holasoymalva/how-to-build-a-rest-api-with-node-js-and-typescript-3491ddd19f95
 
 import { Router, Request, Response } from "express";
-import { get_user_from_access_token } from "../../common";
+import { get_user_from_access_token } from "../../../common";
 import {
   add_user_goal,
   get_award_list,
   get_user_goals,
   get_user_quests,
   remove_user_goal,
-} from "../business_progress/goals-storage";
+} from "./goals-storage";
 
 const router = Router();
 
