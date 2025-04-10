@@ -30,7 +30,7 @@ router.post(
 );
 
 router.post(
-  "/api/v1/business_progress/goals/award_list",
+  "/api/v1/business_progress/awards/list",
   (req: Request, res: Response) => {
     try {
       const awards = get_award_list(
@@ -81,7 +81,7 @@ router.post(
 );
 
 router.post(
-  "/api/v1/business_progress/goals/quest_list",
+  "/api/v1/business_progress/quests/list",
   (req: Request, res: Response) => {
     try {
       const quests = get_user_quests(req.body.access_token);

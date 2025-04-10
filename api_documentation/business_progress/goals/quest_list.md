@@ -1,8 +1,8 @@
-# Query List
+# Quest List
 
 Method: `POST`
 
-Endpoint: `/api/v1/business_progress/query/list`
+Endpoint: `/api/v1/business_progress/quests/list`
 
 Request:
 
