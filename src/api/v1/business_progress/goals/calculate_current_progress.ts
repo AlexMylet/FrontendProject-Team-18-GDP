@@ -4,8 +4,16 @@ import { StoredGoal, Goal } from "./goals-types";
 // If, say, timestamp of business data has not changed
 // and the goal has not been updated, then cache.
 function calculate_current_progress(goal: StoredGoal): Goal {
-  // throw("NotImplemented (calculate_current_progress)")
-  const current_progress = 0; // TODO: actual mocking
+  let current_progress = 0;
+  if (goal.id == "TESTG0") {
+    current_progress = 15000;
+  } else if (goal.id == "TESTG1") {
+    current_progress = 300;
+  } else if (goal.id == "TESTQ0") {
+    current_progress = 0;
+  } else if (goal.id == "TESTQ1") {
+    current_progress = 12.34;
+  }
   return {
     name: goal.name,
     unit: goal.unit,

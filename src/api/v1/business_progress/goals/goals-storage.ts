@@ -17,6 +17,8 @@ import {
 
 import calculate_current_progress from "./calculate_current_progress";
 
+import { mock_goals, mock_quests, mock_awards } from "./mock_data";
+
 function storage_factory<T extends hasID<R>, R>(
   storage_dictionary: Record<UserID, T[]>,
 ): Storage<T, R> {
@@ -47,13 +49,13 @@ function storage_factory<T extends hasID<R>, R>(
   return goal_storage;
 }
 
-const storage_dictionary: Record<UserID, StoredGoal[]> = {};
+const storage_dictionary: Record<UserID, StoredGoal[]> = mock_goals;
 const goal_storage = storage_factory<StoredGoal, UUID>(storage_dictionary);
 
-const quest_dictionary: Record<UserID, StoredGoal[]> = {};
+const quest_dictionary: Record<UserID, StoredGoal[]> = mock_quests;
 const quest_storage = storage_factory<StoredGoal, UUID>(quest_dictionary);
 
-const award_dictionary: Record<UserID, Award[]> = {};
+const award_dictionary: Record<UserID, Award[]> = mock_awards;
 const award_storage = storage_factory<Award, UUID>(award_dictionary);
 
 function get_award_list(userID: UserID): Award[] {
