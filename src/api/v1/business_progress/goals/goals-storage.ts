@@ -11,55 +11,58 @@ import {
   StoredGoal,
   Goal,
   Award,
-  GoalStorage,
+  Storage,
+  hasID,
 } from "./goals-types";
 
 import calculate_current_progress from "./calculate_current_progress";
 
-function goal_storage_factory(
-  goal_dictionary: Record<UserID, StoredGoal[]>,
-): GoalStorage {
-  const goal_storage: GoalStorage = {
+function storage_factory<T extends hasID<R>, R>(
+  storage_dictionary: Record<UserID, T[]>,
+): Storage<T, R> {
+  const goal_storage: Storage<T, R> = {
     get: (userID: UserID) => {
-      const res = goal_dictionary[userID];
+      const res = storage_dictionary[userID];
       if (res == null) {
         return [];
       } else {
         return res;
       }
     },
-    add: (userID: UserID, goal: StoredGoal) => {
-      console.assert(goal.goal_or_quest === "Goal");
-      const the_entry = goal_dictionary[userID];
+    add: (userID: UserID, added_item: T) => {
+      const the_entry = storage_dictionary[userID];
       if (the_entry == null) {
-        goal_dictionary[userID] = [goal];
+        storage_dictionary[userID] = [added_item];
       } else {
-        the_entry.push(goal);
-        goal_dictionary[userID] = the_entry;
+        the_entry.push(added_item);
+        storage_dictionary[userID] = the_entry;
       }
     },
-    remove: (userID: UserID, goal_uuid: UUID) => {
-      goal_dictionary[userID] = goal_dictionary[userID].filter(
-        (goal) => goal.id !== goal_uuid,
+    remove: (userID: UserID, given_id: R) => {
+      storage_dictionary[userID] = storage_dictionary[userID].filter(
+        (goal) => goal.id !== given_id,
       );
     },
   };
   return goal_storage;
 }
 
-const goal_dictionary: Record<UserID, StoredGoal[]> = {};
-const goal_storage = goal_storage_factory(goal_dictionary);
+const storage_dictionary: Record<UserID, StoredGoal[]> = {};
+const goal_storage = storage_factory<StoredGoal, UUID>(storage_dictionary);
 
 const quest_dictionary: Record<UserID, StoredGoal[]> = {};
-const quest_storage = goal_storage_factory(quest_dictionary);
+const quest_storage = storage_factory<StoredGoal, UUID>(quest_dictionary);
+
+const award_dictionary: Record<UserID, Award[]> = {};
+const award_storage = storage_factory<Award, UUID>(award_dictionary);
 
 function get_award_list(userID: UserID): Award[] {
-  throw Error("NotImplemented (get_award_list)");
+  return award_storage.get(userID);
 }
 
 function get_goals_from_storage(
   access_token: AccessToken,
-  storage: GoalStorage,
+  storage: Storage<StoredGoal, UUID>,
 ): Goal[] {
   const the_goals: StoredGoal[] = storage.get(
     get_user_from_access_token(access_token),

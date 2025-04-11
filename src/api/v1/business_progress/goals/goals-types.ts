@@ -6,8 +6,11 @@ interface PartialGoal {
   target: number;
 }
 
-interface StoredGoal extends PartialGoal {
-  id: UUID;
+interface hasID<R> {
+  id: R;
+}
+
+interface StoredGoal extends PartialGoal, hasID<UUID> {
   goal_or_quest: "Goal" | "Quest";
 }
 
@@ -15,18 +18,17 @@ interface Goal extends StoredGoal {
   current_progress: number;
 }
 
-interface Award {
-  id: UUID;
+interface Award extends hasID<UUID> {
   name: string;
   description: string;
   achieved_date: string; // YYYY-MM-DD
 }
 
 // Storage interaction
-interface GoalStorage {
-  get: (userID: UserID) => StoredGoal[];
-  add: (userID: UserID, goal: StoredGoal) => void;
-  remove: (userID: UserID, goal_UUID: UUID) => void;
+interface Storage<T extends hasID<R>, R> {
+  get: (userID: UserID) => T[];
+  add: (userID: UserID, goal: T) => void;
+  remove: (userID: UserID, goal_UUID: R) => void;
 }
 
-export type { PartialGoal, StoredGoal, Goal, Award, GoalStorage };
+export type { PartialGoal, StoredGoal, Goal, Award, Storage, hasID };

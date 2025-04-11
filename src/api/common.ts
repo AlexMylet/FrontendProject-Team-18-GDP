@@ -1,9 +1,22 @@
+let current_uuid_number = 0;
+
+const access_token_user_dictionary: Record<AccessToken, UserID> = {
+  TEST_ACCESS_TOKEN: "TEST_USER_ID",
+};
+
 export type AccessToken = string;
 export type UUID = string;
 export type UserID = UUID;
 export function new_UUID(): UUID {
-  throw Error("NotImplemented (new_UUID)");
+  const uuid = current_uuid_number.toString();
+  current_uuid_number += 1;
+  return uuid;
 }
 export function get_user_from_access_token(access_token: AccessToken): UserID {
-  throw Error("NotImplemented (get_user_from_access_token)");
+  const user = access_token_user_dictionary[access_token];
+  if (user == null) {
+    throw new Error("Invalid Access Token");
+  } else {
+    return user;
+  }
 }
