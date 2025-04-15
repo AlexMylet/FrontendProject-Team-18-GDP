@@ -97,7 +97,12 @@ function add_user_goal(
 }
 
 function remove_user_goal(access_token: AccessToken, goal_uuid: UUID): void {
-  goal_storage.remove(get_user_from_access_token(access_token), goal_uuid);
+  // Check goal does already exist
+  const user = get_user_from_access_token(access_token);
+  if (!goal_storage.get(user).some((goal) => goal.id === goal_uuid)) {
+    throw new Error("Goal does not exist");
+  }
+  goal_storage.remove(user, goal_uuid);
 }
 
 export {

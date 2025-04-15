@@ -64,7 +64,8 @@ test("goal_list", async () => {
   expect(response.body.goals).toStrictEqual([]);
 });
 
-// TODO - goal_list Error cases
+// Error tests - see goals-api-no-mocks.test.ts (Invalid Access Token)
+// Note - not testing what happens if API caller doesn't provide a value
 
 test("add goals", async () => {
   (get_user_from_access_token as jest.Mock).mockReturnValue("1002");
@@ -92,7 +93,8 @@ test("add goals", async () => {
   expect(second_reponse.body.updated_goals.length).toBe(2);
 });
 
-// TODO - Errors
+// Error tests - see goals-api-no-mocks.test.ts (Invalid Access Token)
+// Note - not testing what happens if API caller doesn't provide a value
 
 test("edit goals", async () => {
   // Add two goals
@@ -139,7 +141,22 @@ test("edit goals", async () => {
   expect(third_reponse.body.updated_goals.length).toBe(2);
 });
 
-// TODO - errors
+// Error tests - see also goals-api-no-mocks.test.ts (Invalid Access Token)
+// Note - not testing what happens if API caller doesn't provide a value
+
+test("edit non-existent goal", async () => {
+  (get_user_from_access_token as jest.Mock).mockReturnValue("1013");
+  const response = await request(app)
+    .post("/api/v1/business_progress/goals/edit")
+    .send({
+      access_token: "1013",
+      goal_uuid: "000-000",
+      updated_goal: the_goal,
+    });
+  expect(response.status).toBe(200);
+  expect(response.body.success).toBeFalsy();
+  expect(response.body.failed_msg).toBe("Goal does not exist");
+});
 
 test("remove goals", async () => {
   (get_user_from_access_token as jest.Mock).mockReturnValue("1004");
@@ -177,7 +194,22 @@ test("remove goals", async () => {
   ]);
 });
 
-// TODO - errors
+// Error tests - see also goals-api-no-mocks.test.ts (Invalid Access Token)
+// Note - not testing what happens if API caller doesn't provide a value
+
+test("remove non-existent goal", async () => {
+  (get_user_from_access_token as jest.Mock).mockReturnValue("1014");
+  const response = await request(app)
+    .post("/api/v1/business_progress/goals/remove")
+    .send({
+      access_token: "1014",
+      goal_uuid: "000-000",
+      updated_goal: the_goal,
+    });
+  expect(response.status).toBe(200);
+  expect(response.body.success).toBeFalsy();
+  expect(response.body.failed_msg).toBe("Goal does not exist");
+});
 
 test("list quests", async () => {
   (get_user_from_access_token as jest.Mock).mockReturnValue("1005");
@@ -190,7 +222,8 @@ test("list quests", async () => {
   expect(response.body.goals).toStrictEqual([]);
 });
 
-// TODO - errors
+// Error tests - see goals-api-no-mocks.test.ts (Invalid Access Token)
+// Note - not testing what happens if API caller doesn't provide a value
 
 test("list awards", async () => {
   (get_user_from_access_token as jest.Mock).mockReturnValue("1006");
@@ -202,3 +235,6 @@ test("list awards", async () => {
   expect(response.body.success).toBeTruthy();
   expect(response.body.awards).toStrictEqual([]);
 });
+
+// Error tests - see goals-api-no-mocks.test.ts (Invalid Access Token)
+// Note - not testing what happens if API caller doesn't provide a value
