@@ -89,9 +89,7 @@ function add_user_goal(
 ): void {
   const id = existing_uuid === null ? new_UUID() : existing_uuid;
   const full_goal: StoredGoal = {
-    name: added_goal.name,
-    unit: added_goal.unit,
-    target: added_goal.target,
+    ...added_goal,
     id: id,
     goal_or_quest: "Goal",
   };
