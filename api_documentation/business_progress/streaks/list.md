@@ -17,10 +17,10 @@ Success Response:
 ```json
 {
   "success": true,
-  "goals": Array[{
+  "streaks": Array[{
     "id": UUID,
     "name": string,
-    "streaks": int
+    "streak": int
   }]
 }
 ```
