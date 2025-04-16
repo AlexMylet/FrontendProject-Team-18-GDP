@@ -6,48 +6,13 @@ import {
   UserID,
 } from "../../../common";
 
-import {
-  PartialGoal,
-  StoredGoal,
-  Goal,
-  Award,
-  Storage,
-  hasID,
-} from "./goals-types";
+import { storage_factory, Storage } from "../../../common-storage";
+
+import { PartialGoal, StoredGoal, Goal, Award } from "./goals-types";
 
 import calculate_current_progress from "./calculate_current_progress";
 
 import { mock_goals, mock_quests, mock_awards } from "./mock_data";
-
-function storage_factory<T extends hasID<R>, R>(
-  storage_dictionary: Record<UserID, T[]>,
-): Storage<T, R> {
-  const goal_storage: Storage<T, R> = {
-    get: (userID: UserID) => {
-      const res = storage_dictionary[userID];
-      if (res == null) {
-        return [];
-      } else {
-        return res;
-      }
-    },
-    add: (userID: UserID, added_item: T) => {
-      const the_entry = storage_dictionary[userID];
-      if (the_entry == null) {
-        storage_dictionary[userID] = [added_item];
-      } else {
-        the_entry.push(added_item);
-        storage_dictionary[userID] = the_entry;
-      }
-    },
-    remove: (userID: UserID, given_id: R) => {
-      storage_dictionary[userID] = storage_dictionary[userID].filter(
-        (goal) => goal.id !== given_id,
-      );
-    },
-  };
-  return goal_storage;
-}
 
 const storage_dictionary: Record<UserID, StoredGoal[]> = mock_goals;
 const goal_storage = storage_factory<StoredGoal, UUID>(storage_dictionary);

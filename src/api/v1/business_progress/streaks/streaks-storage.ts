@@ -5,25 +5,11 @@ import {
   get_user_from_access_token,
 } from "../../../common";
 
-import { Streak, Storage, hasID } from "./streaks-types";
+import { storage_factory, Storage } from "../../../common-storage.ts";
+
+import { Streak } from "./streaks-types";
 
 import { mock_streaks } from "./mock_data.ts";
-
-function storage_factory<T extends hasID<R>, R>(
-  storage_dictionary: Record<UserID, T[]>,
-): Storage<T, R> {
-  const streak_storage: Storage<T, R> = {
-    get: (userID: UserID) => {
-      const res = storage_dictionary[userID];
-      if (res == null) {
-        return [];
-      } else {
-        return res;
-      }
-    },
-  };
-  return streak_storage;
-}
 
 function get_streaks_from_storage(
   access_token: AccessToken,

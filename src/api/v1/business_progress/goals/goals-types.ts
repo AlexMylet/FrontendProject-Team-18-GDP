@@ -1,13 +1,10 @@
-import { UUID, UserID } from "../../../common";
+import { UUID } from "../../../common";
+import { hasID } from "../../../common-storage";
 
 interface PartialGoal {
   name: string;
   unit: string;
   target: number;
-}
-
-interface hasID<R> {
-  id: R;
 }
 
 interface StoredGoal extends PartialGoal, hasID<UUID> {
@@ -24,11 +21,4 @@ interface Award extends hasID<UUID> {
   achieved_date: string; // YYYY-MM-DD
 }
 
-// Storage interaction
-interface Storage<T extends hasID<R>, R> {
-  get: (userID: UserID) => T[];
-  add: (userID: UserID, goal: T) => void;
-  remove: (userID: UserID, goal_UUID: R) => void;
-}
-
-export type { PartialGoal, StoredGoal, Goal, Award, Storage, hasID };
+export type { PartialGoal, StoredGoal, Goal, Award };

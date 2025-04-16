@@ -1,4 +1,4 @@
-import { UUID, UserID } from "../../../common";
+import { UUID } from "../../../common";
 
 interface Streak {
   id: UUID;
@@ -6,12 +6,4 @@ interface Streak {
   streak: number;
 }
 
-interface hasID<R> {
-  id: R;
-}
-
-interface Storage<T extends hasID<R>, R> {
-  get: (userID: UserID) => T[];
-}
-
-export type { Streak, Storage, hasID };
+export type { Streak };
