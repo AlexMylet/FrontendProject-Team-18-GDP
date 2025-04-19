@@ -2,6 +2,9 @@ let current_uuid_number = 0;
 
 const access_token_user_dictionary: Record<AccessToken, UserID> = {
   TEST_ACCESS_TOKEN: "TEST_USER_ID",
+  TEST_ACCESS_TOKEN_ALICE: "TEST_ALICE",
+  TEST_ACCESS_TOKEN_BOB: "TEST_BOB",
+  TEST_ACCESS_TOKEN_CHARLIE: "TEST_CHARLIE",
 };
 
 export type AccessToken = string;
