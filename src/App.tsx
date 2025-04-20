@@ -1,9 +1,8 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider, useMutation, useQuery } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import BottomNav from "./components/BottomNav";
 import Index from "./pages/Index";
 import Today from "./pages/Today";
@@ -16,6 +15,8 @@ import Customize from "./pages/Customize";
 import Forecast from "./pages/Forecast";
 import NotFound from "./pages/NotFound";
 import ProductAnalysisScreen from "./pages/ProductAnalysisScreen";
+import Goals from "./pages/Goals";
+import Auth from "./pages/Auth";
 
 const queryClient = new QueryClient();
 
@@ -70,9 +71,11 @@ const App = () => (
       <div className="pb-20">
         <Toaster />
         <Sonner />
-        <BrowserRouter>
+        <Router>
           <Routes>
             <Route path="/" element={<Today />} />
+            <Route path="/auth" element={<Auth />} />
+            <Route path="/goals" element={<Goals />} />
             <Route path="/index" element={<Index />} />
             <Route path="/ask-anything" element={<Coach />} />
             <Route path="/coach/negative-margin" element={<CoachNegativeMargin />} />
@@ -87,7 +90,7 @@ const App = () => (
           <APICheck />
           <POSTTest />
           <BottomNav />
-        </BrowserRouter>
+        </Router>
       </div>
     </TooltipProvider>
   </QueryClientProvider>
