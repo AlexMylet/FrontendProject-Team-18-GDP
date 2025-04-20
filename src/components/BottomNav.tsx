@@ -1,6 +1,5 @@
-
 import { Link, useLocation } from "react-router-dom";
-import { Calendar, User, TrendingUp, ChartLine, Settings } from "lucide-react";
+import { Calendar, User, TrendingUp, ChartLine, Settings, Target } from "lucide-react";
 
 const BottomNav = () => {
   const location = useLocation();
@@ -13,6 +12,7 @@ const BottomNav = () => {
     { icon: Calendar, label: "Today", path: "/" },
     { icon: User, label: "Coach", path: "/ask-anything" },
     { icon: TrendingUp, label: "Progress", path: "/scorecard" },
+    { icon: Target, label: "Goals", path: "/goals" },
     { icon: ChartLine, label: "Forecast", path: "/forecast" },
     { icon: Settings, label: "Customize", path: "/notifications" },
   ];
