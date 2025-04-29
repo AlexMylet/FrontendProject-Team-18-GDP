@@ -36,35 +36,6 @@ function APICheck() {
   </div>
 }
 
-function POSTTest() {
-  const doPOST = async () => {
-    const res = await fetch("http://localhost:3000/api/v1/echo",
-      {
-        method: "POST",
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({a: 1, b: "Hello"})
-      }
-    )
-    return res.json()
-  }
-
-  const mutation = useMutation({ mutationFn: doPOST })
-
-  return <div>
-  {
-    <>
-    { mutation.isError ? <div>Query failed: {mutation.error.message}</div> : null }
-    { mutation.isPending ? <div>Pending ...</div> : null }
-    { mutation.isSuccess ? <div>Success</div> : null }
-    <button onClick={() => {mutation.mutate()}}>Mutate</button>
-    </>
-  }
-  </div>
-}
-
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
@@ -88,7 +59,6 @@ const App = () => (
             <Route path="*" element={<NotFound />} />
           </Routes>
           <APICheck />
-          <POSTTest />
           <BottomNav />
         </Router>
       </div>
