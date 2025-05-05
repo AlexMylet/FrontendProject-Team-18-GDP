@@ -17,25 +17,71 @@ import NotFound from "./pages/NotFound";
 import ProductAnalysisScreen from "./pages/ProductAnalysisScreen";
 import Goals from "./pages/Goals";
 import Auth from "./pages/Auth";
+import { CheckCircle, XCircle, Loader2 } from "lucide-react";
 
 const queryClient = new QueryClient();
 
-// https://rapidapi.com/guides/call-apis-react-query
+// API Health Check component with icon indicator (Frontend Change)
 function APICheck() {
   const getHealth = async () => {
     const res = await fetch("http://localhost:3000/api/v1/health");
+    return res.json();
+  };
+  const { data, error, isLoading } = useQuery({ queryKey: ["health"], queryFn: getHealth });
+
+  // Use icon and color to indicate API status (Frontend Change)
+  let icon = null;
+  let label = "";
+  if (isLoading) {
+    icon = <Loader2 className="w-4 h-4 text-yellow-400 animate-spin" />; // Yellow spinner for loading
+    label = "Checking API...";
+  } else if (error || !data?.success) {
+    icon = <XCircle className="w-4 h-4 text-red-500" />; // Red cross for error
+    label = "API Down";
+  } else {
+    icon = <CheckCircle className="w-4 h-4 text-green-500" />; // Green check for healthy
+    label = "API Healthy";
+  }
+
+  // Fixed position, styled to match app (Frontend Change)
+  return (
+    <div className="fixed left-2 bottom-2 flex items-center gap-2 z-50 bg-black/80 px-3 py-1 rounded-full border border-[#F97316]/30 shadow">
+      {icon}
+      <span className="text-xs text-[#F97316]">{label}</span>
+    </div>
+  );
+}
+
+function POSTTest() {
+  const doPOST = async () => {
+    const res = await fetch("http://localhost:3000/api/v1/echo",
+      {
+        method: "POST",
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({a: 1, b: "Hello"})
+      }
+    )
     return res.json()
   }
-  const {data, error, isLoading} = useQuery({ queryKey: ['health'], queryFn: getHealth })
+
+  const mutation = useMutation({ mutationFn: doPOST })
+
   return <div>
-    {
-      error ? <div>API Health Check Failed</div>
-      : isLoading ? <div>Checking API Health ...</div>
-      : <div>API Health Good!</div>
-    }
+  {
+    <>
+    { mutation.isError ? <div>Query failed: {mutation.error.message}</div> : null }
+    { mutation.isPending ? <div>Pending ...</div> : null }
+    { mutation.isSuccess ? <div>Success</div> : null }
+    <button onClick={() => {mutation.mutate()}}>Mutate</button>
+    </>
+  }
   </div>
 }
 
+// Main App component with all routes and providers
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
@@ -44,6 +90,7 @@ const App = () => (
         <Sonner />
         <Router>
           <Routes>
+            {/* Route structure unchanged, but new pages/components may have been added elsewhere (Frontend Change) */}
             <Route path="/" element={<Today />} />
             <Route path="/auth" element={<Auth />} />
             <Route path="/goals" element={<Goals />} />
@@ -58,6 +105,7 @@ const App = () => (
             <Route path="/product-analysis" element={<ProductAnalysisScreen />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
+          {/* API status icon at bottom left (Frontend Change) */}
           <APICheck />
           <BottomNav />
         </Router>

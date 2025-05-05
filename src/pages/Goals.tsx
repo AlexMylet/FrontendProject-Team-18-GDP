@@ -20,8 +20,8 @@ const GoalsScreen = () => {
 
   const queryClient = useQueryClient();
 
+  // --- Frontend Change: Fetch goals from API ---
   const fetchGoals = async () => {
-    console.log("Fetching goals with token:", TEST_ACCESS_TOKEN);
     const response = await fetch("http://localhost:3000/api/v1/business_progress/goals/goal_list", {
       method: "POST",
       headers: {
@@ -30,13 +30,12 @@ const GoalsScreen = () => {
       body: JSON.stringify({ access_token: TEST_ACCESS_TOKEN }),
     });
     const data = await response.json();
-    console.log("Goals response:", data);
     if (!data.success) throw new Error(data.failed_msg);
     return data.goals;
   };
 
+  // --- Frontend Change: Fetch quests from API ---
   const fetchQuests = async () => {
-    console.log("Fetching quests with token:", TEST_ACCESS_TOKEN);
     const response = await fetch("http://localhost:3000/api/v1/business_progress/quests/list", {
       method: "POST",
       headers: {
@@ -45,11 +44,11 @@ const GoalsScreen = () => {
       body: JSON.stringify({ access_token: TEST_ACCESS_TOKEN }),
     });
     const data = await response.json();
-    console.log("Quests response:", data);
     if (!data.success) throw new Error(data.failed_msg);
     return data.goals;
   };
 
+  // --- Frontend Change: Fetch leaderboards and discovery from API ---
   const fetchLeaderboards = async () => {
     const discoveryResponse = await fetch("http://localhost:3000/api/v1/business_progress/leaderboard/discovery", {
       method: "POST",
@@ -60,6 +59,7 @@ const GoalsScreen = () => {
     const discoveryData = await discoveryResponse.json();
     if (!discoveryData.success) throw new Error(discoveryData.failed_msg);
 
+    // Fetch top 3 entries for each leaderboard
     const leaderboards = await Promise.all(
       discoveryData.leaderboard.map(async (board) => {
         const response = await fetch("http://localhost:3000/api/v1/business_progress/leaderboard/list", {
@@ -83,6 +83,7 @@ const GoalsScreen = () => {
     return leaderboards;
   };
 
+  // --- Frontend Change: Fetch streaks from API ---
   const fetchStreaks = async () => {
     const response = await fetch("http://localhost:3000/api/v1/business_progress/streaks/list", {
       method: "POST",
@@ -96,26 +97,43 @@ const GoalsScreen = () => {
     return data.streaks;
   };
 
+  // --- Frontend Change: Fetch awards from API ---
+  const fetchAwards = async () => {
+    const response = await fetch("http://localhost:3000/api/v1/business_progress/awards/list", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ access_token: TEST_ACCESS_TOKEN }),
+    });
+    const data = await response.json();
+    if (!data.success) throw new Error(data.failed_msg);
+    return data.awards;
+  };
+
+  // --- Frontend Change: React Query hooks for all new API calls ---
   const { data: goals = [], isLoading: isLoadingGoals, error: goalsError } = useQuery({
     queryKey: ["goals"],
     queryFn: fetchGoals,
   });
-
   const { data: quests = [], isLoading: isLoadingQuests, error: questsError } = useQuery({
     queryKey: ["quests"],
     queryFn: fetchQuests,
   });
-
   const { data: leaderboards = [], isLoading: isLoadingLeaderboards } = useQuery({
     queryKey: ["leaderboards"],
     queryFn: fetchLeaderboards,
   });
-
   const { data: streaks = [], isLoading: isLoadingStreaks } = useQuery({
     queryKey: ["streaks"],
     queryFn: fetchStreaks,
   });
+  const { data: awards = [], isLoading: isLoadingAwards } = useQuery({
+    queryKey: ["awards"],
+    queryFn: fetchAwards,
+  });
 
+  // --- Frontend Change: Add goal mutation with proper query invalidation ---
   const addGoalMutation = useMutation({
     mutationFn: async (goal: typeof newGoal) => {
       const response = await fetch("http://localhost:3000/api/v1/business_progress/goals/add", {
@@ -138,6 +156,7 @@ const GoalsScreen = () => {
       return data.updated_goals;
     },
     onSuccess: () => {
+      // --- Frontend Change: Invalidate queries separately for immediate UI update ---
       queryClient.invalidateQueries({ queryKey: ["goals"] });
       queryClient.invalidateQueries({ queryKey: ["quests"] });
       setShowAddDialog(false);
@@ -149,7 +168,8 @@ const GoalsScreen = () => {
     addGoalMutation.mutate(newGoal);
   };
 
-  if (isLoadingGoals || isLoadingQuests || isLoadingLeaderboards || isLoadingStreaks) {
+  // --- Frontend Change: Unified loading state for all new API calls ---
+  if (isLoadingGoals || isLoadingQuests || isLoadingLeaderboards || isLoadingStreaks || isLoadingAwards) {
     return (
       <div className="min-h-screen bg-black text-[#F97316] flex items-center justify-center">
         <div>Loading...</div>
@@ -170,6 +190,12 @@ const GoalsScreen = () => {
       <TopBanner />
       <div className="p-4 pt-20">
         <div className="max-w-4xl mx-auto">
+          {/* --- Frontend Change: Money made UI element --- */}
+          <div className="mb-4 flex justify-end">
+            <div className="bg-[#F97316]/10 border border-[#F97316]/40 rounded-lg px-4 py-2 text-sm text-[#F97316] font-semibold shadow">
+              The app has made you: <span className="text-lg font-bold">£1,234</span>
+            </div>
+          </div>
           <div className="flex justify-between items-center mb-6">
             <h1 className="text-2xl font-bold">Goals & Quests</h1>
             <Button 
@@ -182,7 +208,7 @@ const GoalsScreen = () => {
           </div>
 
           <div className="space-y-6">
-            {/* Goals Section */}
+            {/* --- Frontend Change: Goals Section, with space between number and unit --- */}
             <Card className="bg-black border border-[#F97316]/20">
               <CardHeader className="flex flex-row items-center space-x-2">
                 <Target className="h-5 w-5" />
@@ -196,7 +222,7 @@ const GoalsScreen = () => {
                         <div>
                           <h3 className="font-medium">{goal.name}</h3>
                           <p className="text-sm text-white/60">
-                            Target: {goal.target}{goal.unit}
+                            Target: {goal.target} {goal.unit}
                           </p>
                         </div>
                         <div className="w-24 h-2 bg-[#F97316]/20 rounded-full">
@@ -212,7 +238,7 @@ const GoalsScreen = () => {
               </CardContent>
             </Card>
 
-            {/* Quests Section */}
+            {/* --- Frontend Change: Quests Section, with space between number and unit --- */}
             <Card className="bg-black border border-[#F97316]/20">
               <CardHeader className="flex flex-row items-center space-x-2">
                 <Trophy className="h-5 w-5" />
@@ -226,7 +252,7 @@ const GoalsScreen = () => {
                         <div>
                           <h3 className="font-medium">{quest.name}</h3>
                           <p className="text-sm text-white/60">
-                            Target: {quest.target}{quest.unit}
+                            Target: {quest.target} {quest.unit}
                           </p>
                         </div>
                         <div className="w-24 h-2 bg-[#F97316]/20 rounded-full">
@@ -242,7 +268,7 @@ const GoalsScreen = () => {
               </CardContent>
             </Card>
 
-            {/* Leaderboards Section */}
+            {/* --- Frontend Change: Leaderboards Section --- */}
             <Card className="bg-black border border-[#F97316]/20">
               <CardHeader className="flex flex-row items-center space-x-2">
                 <Medal className="h-5 w-5" />
@@ -274,7 +300,7 @@ const GoalsScreen = () => {
               </CardContent>
             </Card>
 
-            {/* Streaks Section */}
+            {/* --- Frontend Change: Streaks Section --- */}
             <Card className="bg-black border border-[#F97316]/20">
               <CardHeader className="flex flex-row items-center space-x-2">
                 <Flame className="h-5 w-5" />
@@ -297,11 +323,35 @@ const GoalsScreen = () => {
                 </div>
               </CardContent>
             </Card>
+
+            {/* --- Frontend Change: Awards Section --- */}
+            <Card className="bg-black border border-[#F97316]/20">
+              <CardHeader className="flex flex-row items-center space-x-2">
+                <Trophy className="h-5 w-5" />
+                <CardTitle>Awards</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {awards.length === 0 ? (
+                    <div className="text-white/60">No awards yet.</div>
+                  ) : (
+                    awards.map((award) => (
+                      <div key={award.id} className="p-4 border border-[#F97316]/20 rounded-lg">
+                        <div className="flex flex-col gap-1">
+                          <span className="font-medium">{award.name}</span>
+                          <span className="text-sm text-white/60">{award.description}</span>
+                          <span className="text-xs text-white/40">Achieved: {award.achieved_date}</span>
+                        </div>
+                      </div>
+                    ))
+                  )}
+                </div>
+              </CardContent>
+            </Card>
           </div>
         </div>
       </div>
-
-      {/* Add Goal Dialog */}
+      {/* --- Frontend Change: Add Goal Dialog remains unchanged except for newGoal state --- */}
       <Dialog open={showAddDialog} onOpenChange={setShowAddDialog}>
         <DialogContent className="bg-black border-[#F97316]/20 text-white">
           <DialogHeader>
