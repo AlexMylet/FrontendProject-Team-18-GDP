@@ -45,7 +45,7 @@ function APICheck() {
 
   // Fixed position, styled to match app (Frontend Change)
   return (
-    <div className="fixed left-2 bottom-2 flex items-center gap-2 z-50 bg-black/80 px-3 py-1 rounded-full border border-[#F97316]/30 shadow">
+    <div className="fixed left-2 bottom-2 flex items-center gap-2 z-50 bg-black/80 px-3 py-1 rounded-full border border-[#F97316]/30 shadow" style={{ pointerEvents: "none" }}>
       {icon}
       <span className="text-xs text-[#F97316]">{label}</span>
     </div>
