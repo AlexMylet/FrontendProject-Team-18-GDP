@@ -39,6 +39,14 @@ Step 5: Start the API running too: In a separate terminal do
 npm run api-dev
 ```
 
+### Testing set-up
+
+Install playwright with
+
+```sh
+npx playwright install --with-deps
+```
+
 ### Edit a file directly in GitHub
 
 - Navigate to the desired file(s).
