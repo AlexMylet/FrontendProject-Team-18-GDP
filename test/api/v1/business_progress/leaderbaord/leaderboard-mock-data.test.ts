@@ -1,7 +1,7 @@
 // Test that the mock_data is correctly returned, for leaderbaords
 import request from "supertest";
 
-import app from "../../../src/api/api";
+import app from "../../../../../src/api/api";
 
 const mock_leaderboard_discovery = [
   {
