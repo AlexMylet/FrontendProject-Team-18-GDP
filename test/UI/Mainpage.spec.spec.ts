@@ -1,4 +1,8 @@
 import { test, expect } from '@playwright/test';
+const expectLocalStorageMatches = async (page, key, value) => {
+  const actual = await page.evaluate((key) => localStorage.getItem(key), key)
+  expect(actual).toBe(JSON.stringify(value));
+}
 
 test('MainPage_Sales_div', async ({ page }) => {
   await page.goto('http://localhost:8080/');
@@ -77,15 +81,21 @@ test('MainPage_WeekOverwiew_div', async ({ page }) => {
   test('Navigation_Bar', async ({ page }) => {
     await page.goto('http://localhost:8080/auth');
     await page.getByRole('link', { name: 'Today' }).click();
+    await expectLocalStorageMatches(page, 'visited', { '/': true });
     await page.waitForURL('http://localhost:8080');
     await page.getByRole('link', { name: 'Coach' }).click();
     await page.waitForURL('http://localhost:8080/ask-anything');
+    await expectLocalStorageMatches(page, 'visited', { '/': true, '/ask-anything': true });
     await page.getByRole('link', { name: 'Progress' }).click();
     await page.waitForURL('http://localhost:8080/scorecard');
+    await expectLocalStorageMatches(page, 'visited', { '/': true, '/ask-anything': true, '/scorecard': true });
     await page.getByRole('link', { name: 'Goals' }).click();
     await page.waitForURL('http://localhost:8080/goals');
+    await expectLocalStorageMatches(page, 'visited', { '/': true, '/ask-anything': true, '/scorecard': true, '/goals': true });
     await page.getByRole('link', { name: 'Forecast' }).click();
     await page.waitForURL('http://localhost:8080/forecast');
+    await expectLocalStorageMatches(page, 'visited', { '/': true, '/ask-anything': true, '/scorecard': true, '/goals': true, '/forecast': true });
     await page.getByRole('link', { name: 'Customize' }).click();
     await page.waitForURL('http://localhost:8080/notifications');
+    await expectLocalStorageMatches(page, 'visited', { '/': true, '/ask-anything': true, '/scorecard': true, '/goals': true, '/forecast': true, '/notifications': true });
   });
