@@ -17,6 +17,7 @@ const GoalsScreen = () => {
     name: "",
     unit: "",
     target: "",
+    current_progress: "",
   });
   const [editedGoalId, setEditedGoalId] = useState(null);
 
@@ -146,6 +147,7 @@ const GoalsScreen = () => {
         goal_or_quest: "Goal",
         unit: goal.unit,
         target: parseFloat(goal.target),
+        current_progress: parseFloat(goal.current_progress),
       }
       const response = await fetch(url, {
         method: "POST",
@@ -170,7 +172,7 @@ const GoalsScreen = () => {
       queryClient.invalidateQueries({ queryKey: ["goals"] });
       queryClient.invalidateQueries({ queryKey: ["quests"] });
       setShowAddDialog(false);
-      setNewGoal({ name: "", unit: "", target: "" });
+      setNewGoal({ name: "", unit: "", target: "", current_progress: "" });
     },
   });
 
@@ -251,6 +253,7 @@ const GoalsScreen = () => {
                                   name: goal.name,
                                   unit: goal.unit,
                                   target: goal.target.toString(),
+                                  current_progress: goal.current_progress,
                                 });
                                 setShowAddDialog(true);
                               }}/>
@@ -401,6 +404,18 @@ const GoalsScreen = () => {
                 onChange={(e) => setNewGoal({ ...newGoal, unit: e.target.value })}
                 className="bg-black border-[#F97316]/20"
                 placeholder="e.g., £, %, days"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="progress">Progress</Label>
+              <Input
+                id="target"
+                type="number"
+                value={newGoal.current_progress}
+                max={newGoal.target}
+                onChange={(e) => setNewGoal({ ...newGoal, current_progress: e.target.value })}
+                className="bg-black border-[#F97316]/20"
               />
             </div>
             <div className="space-y-2">

@@ -4,6 +4,7 @@ import { StoredGoal, Goal } from "./goals-types";
 // If, say, timestamp of business data has not changed
 // and the goal has not been updated, then cache.
 function calculate_current_progress(goal: StoredGoal): Goal {
+  if ('current_progress' in goal) return goal as Goal;
   let current_progress = 0;
   if (goal.id == "TESTG0") {
     current_progress = 15000;
