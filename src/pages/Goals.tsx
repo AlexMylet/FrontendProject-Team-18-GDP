@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
 const TEST_ACCESS_TOKEN = "TEST_ACCESS_TOKEN";
+const TEST_USER_ID = "TEST_USER_ID";
 
 const GoalsScreen = () => {
   const [showAddDialog, setShowAddDialog] = useState(false);
@@ -308,7 +309,8 @@ const GoalsScreen = () => {
                         {board.entries?.map((entry, index) => (
                           <div
                             key={entry.user_id}
-                            className="flex items-center justify-between p-3 border border-[#F97316]/20 rounded-lg"
+                            className={"flex items-center justify-between p-3 border border-[#F97316]/20 rounded-lg" +
+                              (entry.user_id == TEST_USER_ID ? " bg-[#F97316]/10" : "")}
                           >
                             <div className="flex items-center space-x-3">
                               <span className="text-lg font-bold">{index + 1}</span>

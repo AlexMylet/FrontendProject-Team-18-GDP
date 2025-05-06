@@ -10,11 +10,13 @@ const mock_leaderboard: LeaderboardStorage = {
     { user_id: "TEST_ALICE", username: "Alice", value: 1200 },
     { user_id: "TEST_BOB", username: "Bob", value: 1100 },
     { user_id: "TEST_CHARLIE", username: "Charlie", value: 950 },
+    { user_id: "TEST_USER_ID", username: "Me", value: 900 },
   ],
   TESTL1: [
     { user_id: "TEST_BOB", username: "Bob", value: 1500 },
     { user_id: "TEST_ALICE", username: "Alice", value: 1300 },
     { user_id: "TEST_CHARLIE", username: "Charlie", value: 900 },
+    { user_id: "TEST_USER_ID", username: "Me", value: 700 },
   ],
 };
 
