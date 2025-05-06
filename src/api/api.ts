@@ -1,4 +1,5 @@
 import express from "express";
+import cors from "cors";
 import { Request, Response } from "express";
 // Route imports
 import goalsRoutes from "./v1/business_progress/goals/goals";
@@ -7,6 +8,8 @@ import leaderboardRoutes from "./v1/business_progress/leaderboard/leaderboard";
 
 // https://medium.com/@holasoymalva/how-to-build-a-rest-api-with-node-js-and-typescript-3491ddd19f95
 const app = express();
+
+app.use(cors());
 
 app.use(express.json());
 
