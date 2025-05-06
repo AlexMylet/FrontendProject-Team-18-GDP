@@ -238,7 +238,7 @@ const GoalsScreen = () => {
                           <div className="w-24 h-2 bg-[#F97316]/20 rounded-full">
                             <div
                               className="h-full bg-[#F97316] rounded-full"
-                              style={{width: `${(goal.current_progress || 0) / goal.target * 100}%`}}
+                              style={{width: `${ Math.min(100, (goal.current_progress || 0) / goal.target * 100) }%`}}
                             />
                           </div>
                           <div className="pl-4">
