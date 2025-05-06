@@ -1,5 +1,6 @@
-import { Link, useLocation } from "react-router-dom";
-import { Calendar, User, TrendingUp, ChartLine, Settings, Target } from "lucide-react";
+import {Link, useLocation} from "react-router-dom";
+import {Calendar, ChartLine, DotIcon, Settings, Target, TrendingUp, User} from "lucide-react";
+import {useState} from "react";
 
 const BottomNav = () => {
   const location = useLocation();
@@ -16,6 +17,10 @@ const BottomNav = () => {
     { icon: ChartLine, label: "Forecast", path: "/forecast" },
     { icon: Settings, label: "Customize", path: "/notifications" },
   ];
+  const [hasVisited, setHasVisited] = useState(new Set<string>(["/"]))
+  const handleClick = (path: string) => {
+    setHasVisited((prev) => new Set(prev).add(path));
+  };
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 bg-black border-t border-[#F97316]/20 px-4 py-2">
@@ -25,11 +30,15 @@ const BottomNav = () => {
             <Link
               key={item.label}
               to={item.path}
+              onClick={() => handleClick(item.path)}
               className={`flex flex-col items-center space-y-1 ${
                 isActive(item.path) ? "text-[#F97316]" : "text-white"
               } hover:text-[#F97316] transition-colors`}
             >
-              <item.icon size={20} />
+              <div className="relative">
+                { hasVisited.has(item.path) ? null : <DotIcon color="red" className="absolute -top-3 -right-3" /> }
+                <item.icon size={20} className=""/>
+              </div>
               <span className="text-xs">{item.label}</span>
             </Link>
           ))}
