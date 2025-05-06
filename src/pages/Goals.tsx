@@ -3,7 +3,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import TopBanner from "@/components/TopBanner";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Plus, Trophy, Target, Medal, Flame } from "lucide-react";
+import { Plus, Trophy, Target, Medal, Flame, Edit } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -17,6 +17,7 @@ const GoalsScreen = () => {
     unit: "",
     target: "",
   });
+  const [editedGoalId, setEditedGoalId] = useState(null);
 
   const queryClient = useQueryClient();
 
@@ -67,9 +68,9 @@ const GoalsScreen = () => {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ 
+          body: JSON.stringify({
             leaderboard_id: board.leaderboard_id,
-            max_length: 3 
+            max_length: 3
           }),
         });
         const data = await response.json();
@@ -136,19 +137,27 @@ const GoalsScreen = () => {
   // --- Frontend Change: Add goal mutation with proper query invalidation ---
   const addGoalMutation = useMutation({
     mutationFn: async (goal: typeof newGoal) => {
-      const response = await fetch("http://localhost:3000/api/v1/business_progress/goals/add", {
+      const url = editedGoalId ?
+        "http://localhost:3000/api/v1/business_progress/goals/edit" :
+        "http://localhost:3000/api/v1/business_progress/goals/add";
+      const backendGoal = {
+        name: goal.name,
+        goal_or_quest: "Goal",
+        unit: goal.unit,
+        target: parseFloat(goal.target),
+      }
+      const response = await fetch(url, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
+        body: JSON.stringify(editedGoalId ? {
           access_token: TEST_ACCESS_TOKEN,
-          goal: {
-            name: goal.name,
-            goal_or_quest: "Goal",
-            unit: goal.unit,
-            target: parseFloat(goal.target),
-          },
+          updated_goal: backendGoal,
+          goal_uuid: editedGoalId,
+        } : {
+          access_token: TEST_ACCESS_TOKEN,
+          goal: backendGoal,
         }),
       });
       const data = await response.json();
@@ -198,7 +207,7 @@ const GoalsScreen = () => {
           </div>
           <div className="flex justify-between items-center mb-6">
             <h1 className="text-2xl font-bold">Goals & Quests</h1>
-            <Button 
+            <Button
               onClick={() => setShowAddDialog(true)}
               className="bg-[#F97316] hover:bg-[#F97316]/80"
             >
@@ -225,11 +234,26 @@ const GoalsScreen = () => {
                             Target: {goal.target} {goal.unit}
                           </p>
                         </div>
-                        <div className="w-24 h-2 bg-[#F97316]/20 rounded-full">
-                          <div 
-                            className="h-full bg-[#F97316] rounded-full"
-                            style={{ width: `${(goal.current_progress || 0) / goal.target * 100}%` }}
-                          />
+                        <div className="flex justify-between items-center">
+                          <div className="w-24 h-2 bg-[#F97316]/20 rounded-full">
+                            <div
+                              className="h-full bg-[#F97316] rounded-full"
+                              style={{width: `${(goal.current_progress || 0) / goal.target * 100}%`}}
+                            />
+                          </div>
+                          <div className="pl-4">
+                            <Edit
+                              name="edit" className="h-4 w-4"
+                              onClick={() => {
+                                setEditedGoalId(goal.id);
+                                setNewGoal({
+                                  name: goal.name,
+                                  unit: goal.unit,
+                                  target: goal.target.toString(),
+                                });
+                                setShowAddDialog(true);
+                              }}/>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -256,7 +280,7 @@ const GoalsScreen = () => {
                           </p>
                         </div>
                         <div className="w-24 h-2 bg-[#F97316]/20 rounded-full">
-                          <div 
+                          <div
                             className="h-full bg-[#F97316] rounded-full"
                             style={{ width: `${(quest.current_progress || 0) / quest.target * 100}%` }}
                           />
@@ -282,8 +306,8 @@ const GoalsScreen = () => {
                       <p className="text-sm text-white/60">{board.description}</p>
                       <div className="space-y-2">
                         {board.entries?.map((entry, index) => (
-                          <div 
-                            key={entry.user_id} 
+                          <div
+                            key={entry.user_id}
                             className="flex items-center justify-between p-3 border border-[#F97316]/20 rounded-lg"
                           >
                             <div className="flex items-center space-x-3">
@@ -309,8 +333,8 @@ const GoalsScreen = () => {
               <CardContent>
                 <div className="grid grid-cols-2 gap-4">
                   {streaks.map((streak) => (
-                    <div 
-                      key={streak.id} 
+                    <div
+                      key={streak.id}
                       className="p-4 border border-[#F97316]/20 rounded-lg flex items-center justify-between"
                     >
                       <span className="font-medium">{streak.name}</span>
@@ -355,7 +379,7 @@ const GoalsScreen = () => {
       <Dialog open={showAddDialog} onOpenChange={setShowAddDialog}>
         <DialogContent className="bg-black border-[#F97316]/20 text-white">
           <DialogHeader>
-            <DialogTitle>Add New Goal</DialogTitle>
+            <DialogTitle>{editedGoalId ? "Edit Goal" : "Add New Goal"}</DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
             <div className="space-y-2">
@@ -387,12 +411,12 @@ const GoalsScreen = () => {
                 className="bg-black border-[#F97316]/20"
               />
             </div>
-            <Button 
+            <Button
               onClick={handleAddGoal}
               className="w-full bg-[#F97316] hover:bg-[#F97316]/80"
               disabled={addGoalMutation.isPending}
             >
-              {addGoalMutation.isPending ? "Adding..." : "Add Goal"}
+              {editedGoalId ? (addGoalMutation.isPending ? "Saving..." : "Save Goal") : (addGoalMutation.isPending ? "Adding..." : "Add Goal")}
             </Button>
           </div>
         </DialogContent>
