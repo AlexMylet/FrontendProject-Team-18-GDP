@@ -1,6 +1,6 @@
 import {Link, useLocation} from "react-router-dom";
 import {Calendar, ChartLine, DotIcon, Settings, Target, TrendingUp, User} from "lucide-react";
-import {useState} from "react";
+import {useLocalStorage} from "@uidotdev/usehooks";
 
 const BottomNav = () => {
   const location = useLocation();
@@ -17,9 +17,13 @@ const BottomNav = () => {
     { icon: ChartLine, label: "Forecast", path: "/forecast" },
     { icon: Settings, label: "Customize", path: "/notifications" },
   ];
-  const [hasVisited, setHasVisited] = useState(new Set<string>(["/"]))
+  const [hasVisited, setHasVisited] = useLocalStorage("visited", {"/": true})
   const handleClick = (path: string) => {
-    setHasVisited((prev) => new Set(prev).add(path));
+    setHasVisited((prev) => {
+      const visited = {...prev};
+      visited[path] = true
+      return visited;
+    });
   };
 
   return (
@@ -36,7 +40,7 @@ const BottomNav = () => {
               } hover:text-[#F97316] transition-colors`}
             >
               <div className="relative">
-                { hasVisited.has(item.path) ? null : <DotIcon color="red" className="absolute -top-3 -right-3" /> }
+                { hasVisited[item.path] ? null : <DotIcon color="red" className="absolute -top-3 -right-3" /> }
                 <item.icon size={20} className=""/>
               </div>
               <span className="text-xs">{item.label}</span>
