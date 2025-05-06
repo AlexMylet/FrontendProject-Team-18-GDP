@@ -1,8 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from "playwright/test";
 
-test('test', async ({ page }) => {
-  
-});
-test('test 1', async ({ page }) => {
-  
-});
+test("test", async ({ page }) => {});
+test("test 1", async ({ page }) => {});
