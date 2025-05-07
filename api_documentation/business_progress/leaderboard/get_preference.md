@@ -2,14 +2,13 @@
 
 Method: `POST`
 
-Endpoint: `/api/v1/business_progress/leaderboard/update_preference`
+Endpoint: `/api/v1/business_progress/leaderboard/get_preference`
 
 Request:
 
 ```json
 {
   "access_token": access_token,
-  "opt_in": bool, // e.g. default false
 }
 ```
 
@@ -17,7 +16,8 @@ Success Response:
 
 ```json
 {
-  "success": true
+  "success": true,
+  "opt_in": bool 
 }
 ```
 
