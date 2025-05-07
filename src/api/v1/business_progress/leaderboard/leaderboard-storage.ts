@@ -20,6 +20,9 @@ const opt_in: OptIn = mock_opt_in;
 function set_opt_in(user_id: UserID, preference: boolean) {
   opt_in[user_id] = preference;
 }
+function get_opt_in(user_id: UserID) {
+  return opt_in[user_id]
+}
 
 function clean_leaderboard(leaderboard: Leaderboard): Leaderboard {
   return leaderboard.filter((entry) => opt_in[entry.user_id]);
@@ -33,4 +36,4 @@ function get_leaderboard_from_storage(
   return clean.slice(0, max_length);
 }
 
-export { get_leaderboard_from_storage, set_opt_in, leaderboard_discovery };
+export { get_leaderboard_from_storage, set_opt_in, get_opt_in, leaderboard_discovery };
