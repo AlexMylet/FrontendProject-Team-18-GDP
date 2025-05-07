@@ -17,7 +17,7 @@ Success Response:
 ```json
 {
   "success": true,
-  "opt_in": bool 
+  "opt_in": bool
 }
 ```
 

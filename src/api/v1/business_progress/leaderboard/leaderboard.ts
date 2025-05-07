@@ -36,32 +36,32 @@ router.post(
 );
 
 router.post(
-    "/api/v1/business_progress/leaderboard/update_preference",
-    (req: Request, res: Response) => {
-      try {
-        set_opt_in(
-            get_user_from_access_token(req.body.access_token),
-            req.body.opt_in,
-        );
-        res.json({ success: true });
-      } catch (error) {
-        res.json({ success: false, failed_msg: error.message });
-      }
-    },
+  "/api/v1/business_progress/leaderboard/update_preference",
+  (req: Request, res: Response) => {
+    try {
+      set_opt_in(
+        get_user_from_access_token(req.body.access_token),
+        req.body.opt_in,
+      );
+      res.json({ success: true });
+    } catch (error) {
+      res.json({ success: false, failed_msg: error.message });
+    }
+  },
 );
 
 router.post(
-    "/api/v1/business_progress/leaderboard/get_preference",
-    (req: Request, res: Response) => {
-      try {
-        const isOptedIn = get_opt_in(
-            get_user_from_access_token(req.body.access_token),
-        );
-        res.json({ success: true, opt_in: isOptedIn });
-      } catch (error) {
-        res.json({ success: false, failed_msg: error.message });
-      }
-    },
+  "/api/v1/business_progress/leaderboard/get_preference",
+  (req: Request, res: Response) => {
+    try {
+      const isOptedIn = get_opt_in(
+        get_user_from_access_token(req.body.access_token),
+      );
+      res.json({ success: true, opt_in: isOptedIn });
+    } catch (error) {
+      res.json({ success: false, failed_msg: error.message });
+    }
+  },
 );
 
 export default router;
