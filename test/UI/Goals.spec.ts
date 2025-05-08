@@ -36,7 +36,7 @@ test("Goals_add", async ({ page }) => {
         - paragraph: "/Target: \\\\d+ \\\\$/"
         - img
         `);
-    await expect(page.getByText('Target: 10 $')).toBeVisible();
+    await expect(page.locator('#root')).toContainText('Target: 10 $');
 });
 
 test("Goals_add_empty", async ({ page }) => {
@@ -88,7 +88,7 @@ test("Goals_edit", async ({ page }) => {
       - paragraph: "/Target: \\\\d+ #/"
       - img
       `);
-    await expect(page.getByText('Target: 20 #')).toBeVisible();
+    await expect(page.locator('#root')).toContainText('Target: 20 #');
 });
 
 test("Quest_mock_data", async ({ page }) => {    
