@@ -211,7 +211,10 @@ const GoalsScreen = () => {
           <div className="flex justify-between items-center mb-6">
             <h1 className="text-2xl font-bold">Goals & Quests</h1>
             <Button
-              onClick={() => setShowAddDialog(true)}
+              onClick={() => {
+                setEditedGoalId(null);
+                setShowAddDialog(true)
+              }}
               className="bg-[#F97316] hover:bg-[#F97316]/80"
             >
               <Plus className="mr-2 h-4 w-4" />
